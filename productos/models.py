@@ -42,5 +42,5 @@ class Venta(models.Model):
 	cantidad_venta = models.IntegerField()
 	valor = models.IntegerField()
 	fecha_venta = models.DateTimeField(auto_now=True)
-	def __unicode__(self):
-		return (self.cantidad_venta,self.valor)
+	def __str__(self):
+		return (str(self.cantidad_venta),str(self.valor))
