@@ -1,46 +1,35 @@
 from django.db import models
 
 # Create your models here.
-class Usuario(models.Model):
-	usuario = models.CharField(max_length=100, unique=True)
-	password = models.CharField(max_length=100)
-	nombres = models.CharField(max_length=100)
-	apellidos = models.CharField(max_length=100)
-	cedula = models.IntegerField(max_length=50, unique=True)
-	celular = models.IntegerField(max_length=50)
-	def __str__(self):
-		return (self.nombres, self.apellidos)
+class CategoriaProductos(models.Model):
+    id_categoria = models.BigIntegerField(primary_key=True)
+    nombre = models.CharField(max_length=80, blank=True, null=True)
+    descripcion = models.CharField(max_length=250, blank=True, null=True)
 
 
-class Categoria(models.Model):
-	nombre = models.CharField(max_length=100, unique=True)
-	descripcion = models.CharField(max_length=100)
-	def __str__(self):
-		return self.nombre
-
-class Producto(models.Model):
-	nombre = models.CharField(max_length=100, unique=True)
-	cantidad = models.IntegerField()
-	precio = models.IntegerField()
-	fecha_ingreso = models.DateTimeField(auto_now=True)
-	def __str__(self):
-		return self.nombre
+class Productos(models.Model):
+    id_producto = models.BigIntegerField(primary_key=True)
+    nombre = models.CharField(max_length=80, blank=True, null=True)
+    cantidad = models.BigIntegerField(blank=True, null=True)
+    precio = models.BigIntegerField(blank=True, null=True)
+    fecha_ingreso = models.DateField(blank=True, null=True)
+    id_categoria = models.ForeignKey(CategoriaProductos, models.DO_NOTHING, db_column='id_categoria', blank=True, null=True)
 
 
-class Cliente(models.Model):
-	cedula = models.IntegerField(max_length=80, unique=True)
-	nombre = models.CharField(max_length=100)	
-	apellidos = models.CharField(max_length=100)
-	email = models.EmailField(max_length=100, help_text='un correo electronico valido por favor')
-	celular = models.IntegerField(max_length=100)
-	def __str__(self):
-		return (self.nombre,self.apellidos)
+ class Clientes(models.Model):
+    id_cliente = models.BigIntegerField(primary_key=True)
+    cedula = models.BigIntegerField(blank=True, null=True)
+    nombre = models.CharField(max_length=80, blank=True, null=True)
+    apellidos = models.CharField(max_length=80, blank=True, null=True)
+    email = models.CharField(max_length=80, blank=True, null=True)
+    celular = models.BigIntegerField(blank=True, null=True)
+    
 
+class Ventas(models.Model):
+    id_venta = models.BigIntegerField(primary_key=True)
+    cantidad_venta = models.BigIntegerField(blank=True, null=True)
+    valor = models.BigIntegerField(blank=True, null=True)
+    fecha_venta = models.DateField(blank=True, null=True)
+    id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente', blank=True, null=True)       
+    productos= models.ManyToManyField(Productos)
 
-
-class Venta(models.Model):
-	cantidad_venta = models.IntegerField()
-	valor = models.IntegerField()
-	fecha_venta = models.DateTimeField(auto_now=True)
-	def __str__(self):
-		return (str(self.cantidad_venta),str(self.valor))
